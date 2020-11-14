@@ -1,7 +1,11 @@
 use std::io;
 use std::io::prelude::*;
+use std::io::Error;
+use std::io::ErrorKind;
 use std::io::BufReader;
+use std::fs;
 use std::fs::File;
+use std::path::PathBuf;
 
 use super::cmdline::CmdLine;
 
@@ -52,5 +56,36 @@ impl Environ {
         let reader = BufReader::new(f);
         let cmds = Environ::load_cmds(reader);
         Environ::strs_to_cmds(cmds)
+    }
+
+    pub fn save(&self, file_path: &String) -> io::Result<()> {
+        let data = serde_json::to_string(&self)?;
+
+        let mut path_buf = PathBuf::from(file_path);
+
+        path_buf.push(&self.name);
+        path_buf.set_extension("json");
+
+        let path = path_buf.as_path().to_str();
+        let p: &str;
+
+        match path {
+            Some(path_val) => p = path_val,
+            None => return io::Result::Err(Error::new(ErrorKind::InvalidInput, "Invalid path string!"))
+        }
+
+        fs::write(p, data)?;
+        Ok(())
+    }
+
+    pub fn read(file_path: &String, name: &String) -> io::Result<Environ> {
+        let mut path_buf = PathBuf::from(file_path);
+
+        path_buf.push(name);
+        path_buf.set_extension("json");
+
+        let env: Environ = serde_json::from_slice(&fs::read(path_buf)?)?;
+
+        Ok(env)
     }
 }
