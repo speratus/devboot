@@ -6,7 +6,7 @@ use std::fs::File;
 use super::cmdline::CmdLine;
 
 pub struct Environ {
-    project_name: String,
+    name: String,
     config_opts: Vec<String>,
     proc_file: String,
 }
