@@ -5,6 +5,9 @@ use std::fs::File;
 
 use super::cmdline::CmdLine;
 
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Environ {
     name: String,
     config_opts: Vec<String>,
