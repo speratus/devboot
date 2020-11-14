@@ -100,4 +100,12 @@ impl Environ {
 
         fs::copy(Path::new(from_path), path_buf)
     }
+
+    pub fn new(name: String) -> Self {
+        Environ {
+            name: name,
+            config_opts: Vec::new(),
+            proc_file: String::new(),
+        }
+    }
 }
