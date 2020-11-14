@@ -5,6 +5,7 @@ use std::io::ErrorKind;
 use std::io::BufReader;
 use std::fs;
 use std::fs::File;
+use std::path::Path;
 use std::path::PathBuf;
 
 use super::cmdline::CmdLine;
@@ -87,5 +88,16 @@ impl Environ {
         let env: Environ = serde_json::from_slice(&fs::read(path_buf)?)?;
 
         Ok(env)
+    }
+
+    pub fn copy_proc_file(&mut self, from_path: &String, to_path: &String) -> io::Result<u64> {
+        let mut path_buf = PathBuf::from(to_path);
+    
+        let mut proc_name = String::from(self.name.clone());
+        proc_name.push_str("-proc");
+        path_buf.push(&proc_name);
+        self.proc_file = proc_name;
+
+        fs::copy(Path::new(from_path), path_buf)
     }
 }
