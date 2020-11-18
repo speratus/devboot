@@ -108,4 +108,8 @@ impl Environ {
             proc_file: String::new(),
         }
     }
+
+    pub fn push_arg(&mut self, arg: String) {
+        self.config_opts.push(arg);
+    }
 }
